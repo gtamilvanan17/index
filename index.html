@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My GitHub Pages</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      font-weight: bold;
+    }
+
+    #header {
+      text-align: center;
+      padding: 10px;
+      background-color: #115be4;
+      color: #fff;
+      font-size: 24px;
+    }
+
+    #container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-gap: 50px;
+      padding: 60px;
+    }
+
+    .tile {
+      position: relative;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 0 20px 20px rgba(72, 126, 197, 0.1);
+      cursor: pointer;
+    }
+
+    .page-image {
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .page-details {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(45, 144, 211, 0.8);
+      padding: 15px;
+      color: #fff;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .tile:hover .page-image {
+      transform: scale(1.1);
+    }
+
+    .tile:hover .page-details {
+      opacity: 1;
+    }
+
+    .page-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .page-button {
+      background-color: #ffffff;
+      color: #3498db;
+      padding: 15px 5px;
+      border: none;
+      border-radius: 165px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      width: 100%;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .page-button:hover {
+      background-color: #fa00faf1;
+    }
+
+    footer {
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .social-link {
+      margin: 0 10px;
+      font-size: 24px;
+      text-decoration: none;
+      color: #fff;
+    }
+   
+    .social-link:hover {
+      color: #2cf703;
+    }
+
+    .copyright {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+
+    footer:hover {
+      background-color: #555;
+    }
+
+    footer {
+      /* background: url('https://placekitten.com/1920/1080') center center/cover no-repeat; */
+      background-color: #115be4;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+      transition: background 0.5s ease;
+    }
+
+
+
+  </style>
+</head>
+
+<body>
+  <div id="header">My GitHub Pages</div>
+  <div id="container"></div>
+  
+  <footer>
+    <div class="social-links">
+      <a href="#" class="social-link">Facebook</a>
+      <a href="#" class="social-link">Twitter</a>
+      <a href="#" class="social-link">LinkedIn</a>
+      <!-- Add more social media links as needed -->
+    </div>
+    <div class="copyright">&copy; 2024 Tamilvanan Gowran</div>
+    <div class="copyright">All Rights Reserved.</div>
+  </footer>
+
+  <script>
+    async function fetchGitHubPages() {
+      const username = 'gtamilvanan17';
+      const apiUrl = `https://api.github.com/users/${username}/repos?type=owner`;
+
+      try {
+        const response = await fetch(apiUrl);
+        const repositories = await response.json();
+
+        const container = document.getElementById('container');
+
+        // Sort repositories by last updated time in descending order
+        repositories.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+
+        repositories.forEach(repo => {
+          if (repo.has_pages) {
+            const tile = document.createElement('div');
+            tile.classList.add('tile');
+
+            const image = document.createElement('img');
+            image.src = `https://cdn.pixabay.com/photo/2023/11/29/12/29/kid-8419485_1280.jpg`;
+            image.alt = repo.name;
+            image.classList.add('page-image');
+
+            const details = document.createElement('div');
+            details.classList.add('page-details');
+
+            const title = document.createElement('div');
+            title.classList.add('page-title');
+            title.textContent = repo.name;
+
+            const lastUpdated = new Date(repo.updated_at).toLocaleString();
+
+            const lastUpdatedText = document.createElement('p');
+            lastUpdatedText.innerHTML = `<strong>Last Updated:</strong> ${lastUpdated}`;
+
+            const button = document.createElement('button');
+            button.classList.add('page-button');
+            button.textContent = 'Visit Page';
+
+            button.addEventListener('click', () => {
+              window.open(`https://${username}.github.io/${repo.name}/`, '_blank');
+            });
+
+            details.appendChild(title);
+            details.appendChild(lastUpdatedText);
+            details.appendChild(button);
+
+            tile.appendChild(image);
+            tile.appendChild(details);
+
+            container.appendChild(tile);
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching GitHub repositories:', error);
+      }
+    }
+
+    fetchGitHubPages();
+  </script>
+
+</body>
+
+</html>
